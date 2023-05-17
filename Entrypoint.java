@@ -1,17 +1,21 @@
 public class Entrypoint {
     public static void main(String[] args) {
-        DateClient dateClient = new DateClient();
-        DateServer dateServer = new DateServer();
+        ClientMessage clientMessage = new ClientMessage();
+        ClientServer clientServer = new ClientServer();
+        ClientReceive clientClient = new ClientReceive();
 
-        Thread server = new Thread(dateServer);
-        Thread client = new Thread(dateClient);
+        Thread message = new Thread(clientMessage);
+        Thread server = new Thread(clientServer);
+        Thread client = new Thread(clientClient);
 
+        message.start();
         server.start();
         client.start();
         // threadC1.start();
         // threadP1.start();
 
         try {
+            message.join();
             server.join();
             client.join();
             // threadC1.join();
