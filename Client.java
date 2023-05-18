@@ -60,7 +60,7 @@ public class Client {
 
                 }
 
-                bufferedWriter.write(username + "$" + codeConcatenated);
+                bufferedWriter.write(codeConcatenated);
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             }

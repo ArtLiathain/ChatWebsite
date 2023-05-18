@@ -12,11 +12,11 @@ public class RunJava implements Runnable {
     String name;
     ArrayList<Semaphore> semaphores = new ArrayList<Semaphore>();
     int threadorder;
-    ArrayList<String> results;
+    SharedData results;
     LeetCode leetCode;
 
     RunJava(String ConcatenatedCode, String name, ArrayList<Semaphore> semaphores, int threadorder,
-            ArrayList<String> results, LeetCode leetCode) {
+            SharedData results, LeetCode leetCode) {
         this.ConcatenatedCode = ConcatenatedCode;
         this.name = name;
         this.semaphores = semaphores;
@@ -49,19 +49,20 @@ public class RunJava implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             String ans = "";
-            synchronized (semaphores.get(threadorder)) {
-                semaphores.get(threadorder).wait();
-            }
+            // synchronized (semaphores.get(threadorder)) {
+            // semaphores.get(threadorder).wait();
+            // }
             while ((line = reader.readLine()) != null) {
                 ans += line;
             }
             ;
-            results.add(ans);
+            results.addData(ans);
             // Wait for the process to finish
             int exitCode = process.waitFor();
-            synchronized (semaphores.get(threadorder + 1)) {
-                semaphores.get(threadorder + 1).notify();
-            }
+
+            // synchronized (semaphores.get(threadorder + 1)) {
+            // semaphores.get(threadorder + 1).notify();
+            // }
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
