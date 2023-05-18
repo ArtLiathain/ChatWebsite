@@ -1,44 +1,28 @@
 public class Entrypoint {
-    public static void main(String[] args) {
-<<<<<<< main
-        DateClient dateClient = new DateClient();
-        DateServer dateServer = new DateServer();
+        public static void main(String[] args) {
+                ClientServer serve = new ClientServer();
+                ClientMessage client = new ClientMessage("TEST");
+                ClientMessage client2 = new ClientMessage(" HOPE");
 
-        Thread server = new Thread(dateServer);
-        Thread client = new Thread(dateClient);
+                Thread server = new Thread(serve);
+                Thread clientThread = new Thread(client);
 
-=======
-        ClientMessage clientMessage = new ClientMessage();
-        // ClientMessage clientMessage2 = new ClientMessage();
-        ClientServer clientServer = new ClientServer();
-        ClientReceive clientClient = new ClientReceive();
+                Thread clientThread2 = new Thread(client2);
 
-        Thread message = new Thread(clientMessage);
-        // Thread message2 = new Thread(clientMessage2);
-        Thread server = new Thread(clientServer);
-        Thread client = new Thread(clientClient);
+                server.start();
 
-        message.start();
-        // message2.start();
->>>>>>> local
-        server.start();
-        client.start();
+                clientThread.start();
+                clientThread2.start();
 
-        // threadC1.start();
-        // threadP1.start();
+                try {
+                        clientThread.join();
+                        clientThread2.join();
 
-        try {
-<<<<<<< main
-=======
-            message.join();
-            // message2.join();
->>>>>>> local
-            server.join();
-            client.join();
+                        server.join();
 
-            // threadC1.join();
-            // threadP1.join();
-        } catch (Exception e) {
+                } catch (Exception e) {
+                        // TODO: handle exception
+                }
+
         }
-    }
 }
