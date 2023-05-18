@@ -1,7 +1,9 @@
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.io.*;
 
-public class ClientMessage implements Runnable {
+public class ClientMessage {
 
     String messageString;
 
@@ -9,7 +11,7 @@ public class ClientMessage implements Runnable {
         this.messageString = messageString;
     }
 
-    public void run() {
+    public static void main(String[] args) {
         Socket client;
         try {
             client = new Socket("127.0.0.1", 1234);
@@ -18,7 +20,31 @@ public class ClientMessage implements Runnable {
             InputStreamReader inputStreamReader = new InputStreamReader(client.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            bufferedWriter.write(messageString);
+            String codeConcatenated = "";
+            ArrayList<String> code = new ArrayList<String>();
+            Scanner inputScanner = new Scanner(System.in);
+
+            while (inputScanner.hasNextLine()) {
+                String line = inputScanner.nextLine();
+                if (line.equals("redo")) {
+                    code.clear();
+                    line = "";
+                }
+                if (line.equals("submit")) {
+                    for (int i = 0; i < code.size(); i++) {
+                        codeConcatenated = codeConcatenated + code.get(i);
+                    }
+
+                    break;
+                }
+
+                code.add(line);
+
+            }
+            // System.out.println(code);
+            // System.out.println(codeConcatenated);
+
+            bufferedWriter.write(codeConcatenated);
             bufferedWriter.newLine();
             bufferedWriter.flush();
 
