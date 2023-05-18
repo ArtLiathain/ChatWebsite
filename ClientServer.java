@@ -2,9 +2,10 @@ import java.net.*;
 import java.util.ArrayList;
 import java.io.*;
 
-public class ClientServer implements Runnable {
+public class ClientServer {
 
-    public void run() {
+    public static void main(String[] args) {
+
         ServerSocket serverSocket = null;
         ArrayList<String> testArray = new ArrayList<String>() {
         };
@@ -12,15 +13,15 @@ public class ClientServer implements Runnable {
             serverSocket = new ServerSocket(1234);
 
             while (true) {
-                System.out.println("Basic stuff");
+
                 Socket clienSocket = serverSocket.accept();
-                System.out.println("Accepted");
+
                 InputStreamReader inputStreamReader = new InputStreamReader(clienSocket.getInputStream());
-                System.out.println("got here");
+
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(clienSocket.getOutputStream());
                 BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                System.out.println("even got here");
+
                 String temp = bufferedReader.readLine();
                 testArray.add(temp);
                 String all = "";
