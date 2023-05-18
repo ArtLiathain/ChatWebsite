@@ -1,26 +1,27 @@
-public class Entrypoint {
+public class EntryPoint {
     public static void main(String[] args) {
-        ClientMessage clientMessage = new ClientMessage();
-        ClientServer clientServer = new ClientServer();
-        ClientReceive clientClient = new ClientReceive();
+        ClientServer serve = new ClientServer();
+        ClientMessage client = new ClientMessage("TEST");
+        ClientMessage client2 = new ClientMessage(" HOPE");
 
-        Thread message = new Thread(clientMessage);
-        Thread server = new Thread(clientServer);
-        Thread client = new Thread(clientClient);
+        Thread server = new Thread(serve);
+        Thread clientThread = new Thread(client);
 
-        message.start();
+        Thread clientThread2 = new Thread(client2);
+
         server.start();
-        client.start();
-        // threadC1.start();
-        // threadP1.start();
+        clientThread.start();
+        clientThread2.start();
 
         try {
-            message.join();
+            clientThread.join();
+            clientThread2.join();
+
             server.join();
-            client.join();
-            // threadC1.join();
-            // threadP1.join();
+
         } catch (Exception e) {
+            // TODO: handle exception
         }
+
     }
 }

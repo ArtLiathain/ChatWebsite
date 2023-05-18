@@ -1,37 +1,55 @@
 
 import java.net.*;
+import java.util.ArrayList;
 import java.io.*;
 
 public class ClientServer implements Runnable {
+    ArrayList<String> arrayOfMessages = new ArrayList<String>() {
+    };
 
     public void run() {
         try {
-            ServerSocket sock = new ServerSocket(6013);
+            ServerSocket socketServer = new ServerSocket(6013);
             // now listen for connections
             while (true) {
-                Socket client = sock.accept();
+
+                System.out.println("Waiting for Clients");
+                Socket inputSocket = socketServer.accept();
+                System.out.println("Clients Accepted");
                 // we have a connection
 
                 // CODE FOR RECEIVING MESSAGE
-                InputStream in = client.getInputStream();
-                BufferedReader bin = new BufferedReader(new InputStreamReader(in));// read message from the socket
-                String line;// assert received message to line variable
-                StringBuilder message = new StringBuilder(); // message variable to store line after closing client
-                while ((line = bin.readLine()) != null)
-                    message.append(line); // append line to message
+                InputStream inputStream = inputSocket.getInputStream();
+                BufferedReader messageReader = new BufferedReader(new InputStreamReader(inputStream));// read message
+                                                                                                      // from the socket
 
-                client.close(); // close client
+                String message;// assert received message to line variable
+                System.out.println("Read message");
+                // message variable to store line after closing client
+                while ((message = messageReader.readLine()) != null)
+                    arrayOfMessages.add(message); // append line to message
+                System.out.println("Appended To list");
 
-                Socket client2 = sock.accept(); // open new client, which should now connect to "ClientReceive.java"
-                PrintWriter pout = new PrintWriter(
-                        client2.getOutputStream(), true);
-                // write the message to the socket
-                pout.println(message.toString());
+                inputSocket.close(); // close client
+                System.out.println("OutputSocket");
+                Socket outputSocket = socketServer.accept(); // open new client, which should now connect to
+                System.out.println("Output Accepted"); // "ClientReceive.java"
+                PrintWriter printOut = new PrintWriter(
+                        outputSocket.getOutputStream(), true);
+                String allMessages = "";
+                System.out.println("Message Array");
+                for (String oldMessage : arrayOfMessages) {
+                    allMessages += oldMessage;
+                }
+                System.out.println("Ans" + allMessages);
+                printOut.println(allMessages);
                 // close the socket and resume listening for more connections
-                client2.close();
+                outputSocket.close();
+
             }
         } catch (IOException ioe) {
-            System.err.println(ioe);
+            System.err.println(ioe.toString());
         }
+
     }
 }
