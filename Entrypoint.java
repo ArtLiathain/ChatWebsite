@@ -1,4 +1,4 @@
-public class EntryPoint {
+public class Entrypoint {
     public static void main(String[] args) {
         ClientServer serve = new ClientServer();
         ClientMessage client = new ClientMessage("TEST");

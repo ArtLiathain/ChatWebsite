@@ -1,43 +1,35 @@
 import java.net.*;
-import java.util.ArrayList;
 import java.io.*;
 
 public class ClientMessage implements Runnable {
 
+    String messageString;
+
+    ClientMessage(String messageString) {
+        this.messageString = messageString;
+    }
+
     public void run() {
-        ServerSocket serverSocket = null;
-        ArrayList<String> testArray = new ArrayList<String>() {
-        };
+        Socket client;
         try {
-            serverSocket = new ServerSocket(1234);
+            client = new Socket("127.0.0.1", 1234);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(client.getOutputStream());
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+            InputStreamReader inputStreamReader = new InputStreamReader(client.getInputStream());
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            while (true) {
-                System.out.println("Basic stuff");
-                Socket clienSocket = serverSocket.accept();
-                System.out.println("Accepted");
-                InputStreamReader inputStreamReader = new InputStreamReader(clienSocket.getInputStream());
-                System.out.println("got here");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(clienSocket.getOutputStream());
-                BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                System.out.println("even got here");
-                String temp = bufferedReader.readLine();
-                testArray.add(temp);
-                String all = "";
-                for (String string : testArray) {
+            bufferedWriter.write(messageString);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
 
-                    all += string;
-                }
+            System.out.println(bufferedReader.readLine());
 
-                bufferedWriter.write(all);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-
-            }
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
-
 }
