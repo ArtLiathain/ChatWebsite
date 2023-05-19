@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -5,14 +6,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 public class ClientHandler implements Runnable {
 
     // ARTS STUFF
     ArrayList<Thread> threadsToRun = new ArrayList<Thread>() {
-    };
-    ArrayList<Semaphore> semaphores = new ArrayList<Semaphore>() {
     };
     SharedData sharedResults = new SharedData();
     ArrayList<String> users = new ArrayList<String>() {
@@ -21,7 +19,7 @@ public class ClientHandler implements Runnable {
     };
     LeetCode leetCode = new LeetCode(
             "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.You may assume that each input would have exactly one solution, and you may not use the same element twice. indexes in ascending order",
-            "[1,2]", "int target = 9;int[] answer = new int[2]{}; ");
+            "[98,99]", "int target = 398;int[] answer = new int[2]; ");
 
     // END OF ARTS STUFF
 
@@ -101,22 +99,13 @@ public class ClientHandler implements Runnable {
     }
 
     public void runAllSubmissions() {
-        broadcast("Got here");
-        semaphores.add(new Semaphore(1));
-        for (int i = 1; i < codes.size(); i++) {
-            broadcast("all assigned");
-            semaphores.add(new Semaphore(0));
-        }
-        broadcast("Got here");
-        int count = 0;
         for (int i = 0; i < codes.size(); i++) {
+
             threadsToRun.add(new Thread(
-                    new RunJava(codes.get(i), "Thread" + count, semaphores, count, sharedResults,
+                    new RunJava(codes.get(i), "ThreadName" + i, sharedResults,
                             leetCode)));
-            count += 1;
             threadsToRun.get(i).start();
         }
-        broadcast("Got here");
 
         try {
             for (Thread thread : threadsToRun) {
@@ -125,19 +114,22 @@ public class ClientHandler implements Runnable {
         } catch (Exception e) {
             broadcast("THIS BE THE ISSUE");
         }
-        broadcast("Got here");
         int lowIndex = 0;
         double low = 2000;
-        broadcast(sharedResults.getSharedResults().get(0));
         for (int i = 0; i < codes.size(); i++) {
-            String[] answers = sharedResults.getSharedResults().get(i).split(":");
+            String[] answers = sharedResults.getSharedResults(i).split(":");
             if (Double.parseDouble(answers[1]) < low && answers[0].equals(leetCode.getAnswer())) {
                 low = Double.parseDouble(answers[1]);
                 lowIndex = i;
+                broadcast(users.get(i) + " is currently in the lead with " + Double.parseDouble(answers[1]));
+            } else if (answers[0].equals(leetCode.getAnswer())) {
+                broadcast(users.get(i) + " Got it right with a time of " + Double.parseDouble(answers[1]));
+            } else {
+                broadcast(users.get(i) + " Couldn't even get it right");
             }
         }
 
-        broadcast(users.get(lowIndex) + "has won with a time of " + low);
+        broadcast(users.get(lowIndex) + " has won with a time of " + low);
 
     }
 

@@ -1,27 +1,22 @@
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 public class RunJava implements Runnable {
 
     String ConcatenatedCode;
     String name;
-    ArrayList<Semaphore> semaphores = new ArrayList<Semaphore>();
-    int threadorder;
-    SharedData results;
+    SharedData sharedData;
     LeetCode leetCode;
 
-    RunJava(String ConcatenatedCode, String name, ArrayList<Semaphore> semaphores, int threadorder,
-            SharedData results, LeetCode leetCode) {
+    RunJava(String ConcatenatedCode, String name,
+            SharedData sharedData, LeetCode leetCode) {
         this.ConcatenatedCode = ConcatenatedCode;
         this.name = name;
-        this.semaphores = semaphores;
-        this.threadorder = threadorder;
-        this.results = results;
+        this.sharedData = sharedData;
         this.leetCode = leetCode;
     }
 
@@ -37,7 +32,7 @@ public class RunJava implements Runnable {
                             + "{ public static void main(String[] args) throws FileNotFoundException { Scanner s = new Scanner(new File(\"SampleValues.txt\"));ArrayList<Integer> nums = new ArrayList<Integer>();while (s.hasNext()){nums.add(Integer.parseInt(s.next()));}s.close();LocalDateTime startTime = LocalDateTime.now(); "
                             + leetCode.getSetup()
                             + ConcatenatedCode
-                            + "LocalDateTime endDateTime = LocalDateTime.now(); Duration duration = Duration.between(startTime, endDateTime);double time = duration.toMillis();System.out.println('[' + answer[0] + answer[1] + ']' + ':' + time); }}");
+                            + "LocalDateTime endDateTime = LocalDateTime.now(); Duration duration = Duration.between(startTime, endDateTime);double time = duration.toMillis();System.out.println(\"[\" + answer[0] + \",\" + answer[1] + \"]\" + ':' + time); }}");
             writer.close();
 
             Runtime rt = Runtime.getRuntime();
@@ -49,33 +44,28 @@ public class RunJava implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             String ans = "";
-            // synchronized (semaphores.get(threadorder)) {
-            // semaphores.get(threadorder).wait();
-            // }
+
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+
                 ans += line;
+                System.out.println(ans);
             }
-            ;
-            results.addData(ans);
+            sharedData.addData(ans);
+
             // Wait for the process to finish
             int exitCode = process.waitFor();
 
-            // synchronized (semaphores.get(threadorder + 1)) {
-            // semaphores.get(threadorder + 1).notify();
-            // }
-
         } catch (IOException e) {
             // TODO Auto-generated catch block
+            sharedData.addData("Failed:2000");
             System.out.println("Code Failed to Compile");
-            synchronized (semaphores.get(threadorder + 1)) {
-                semaphores.get(threadorder + 1).notify();
-            }
+
         } catch (InterruptedException e) {
+            sharedData.addData("Failed:2000");
             // TODO Auto-generated catch block
             System.out.println("Code Failed to Compile");
-            synchronized (semaphores.get(threadorder + 1)) {
-                semaphores.get(threadorder + 1).notify();
-            }
+
         }
     }
 }

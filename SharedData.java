@@ -1,6 +1,5 @@
-import java.util.ArrayList;
 
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
 
 class SharedData {
     private ArrayList<String> sharedResults;
@@ -9,11 +8,12 @@ class SharedData {
         sharedResults = new ArrayList<>();
     }
 
-    public ArrayList<String> getSharedResults() {
-        return sharedResults;
+    public String getSharedResults(int i) {
+        return sharedResults.get(i);
     }
 
     public void addData(String value) {
         sharedResults.add(value);
     }
+
 }
