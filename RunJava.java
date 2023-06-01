@@ -11,13 +11,15 @@ public class RunJava implements Runnable {
     String name;
     SharedData sharedData;
     LeetCode leetCode;
+    int order;
 
     RunJava(String ConcatenatedCode, String name,
-            SharedData sharedData, LeetCode leetCode) {
+            SharedData sharedData, LeetCode leetCode, int order) {
         this.ConcatenatedCode = ConcatenatedCode;
         this.name = name;
         this.sharedData = sharedData;
         this.leetCode = leetCode;
+        this.order = order;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class RunJava implements Runnable {
                 ans += line;
                 System.out.println(ans);
             }
-            sharedData.addData(ans);
+            sharedData.setSharedResults(order, ans);
 
             // Wait for the process to finish
             int exitCode = process.waitFor();

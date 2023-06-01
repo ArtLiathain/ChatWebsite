@@ -18,7 +18,7 @@ public class ClientHandler implements Runnable {
     ArrayList<String> codes = new ArrayList<String>() {
     };
     LeetCode leetCode = new LeetCode(
-            "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.You may assume that each input would have exactly one solution, and you may not use the same element twice. indexes in ascending order",
+            "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.You may assume that each input would have exactly one solution, and you may not use the same element twice. indexes in ascending order. Assume you're writing in the main funciton and you have the nums arraylist, and your answers should be set to answer[0] and answer[1] respectively",
             "[98,99]", "int target = 398;int[] answer = new int[2]; ");
 
     // END OF ARTS STUFF
@@ -100,10 +100,10 @@ public class ClientHandler implements Runnable {
 
     public void runAllSubmissions() {
         for (int i = 0; i < codes.size(); i++) {
-
+            sharedResults.addData("temp");
             threadsToRun.add(new Thread(
                     new RunJava(codes.get(i), "ThreadName" + i, sharedResults,
-                            leetCode)));
+                            leetCode, i)));
             threadsToRun.get(i).start();
         }
 
