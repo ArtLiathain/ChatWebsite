@@ -12,6 +12,10 @@ class SharedData {
         return sharedResults.get(i);
     }
 
+    public void setSharedResults(int i, String j) {
+        sharedResults.set(i, j);
+    }
+
     public void addData(String value) {
         sharedResults.add(value);
     }

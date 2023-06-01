@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
 
 public class TestAttempt {
     SharedData sharedData = new SharedData();;
@@ -11,7 +10,7 @@ public class TestAttempt {
             "[98,99]", "int target = 398;int[] answer = new int[2]; ");
     RunJava runJava = new RunJava(
             "for (int i = 0; i < nums.size(); i++) {for (int j = i + 1; j < nums.size(); j++) {if (nums.get(i) + nums.get(j) == target) { answer[0] = i;answer[1] = j;}}}",
-            "CRY", sharedData, leetCode);
+            "CRY", sharedData, leetCode, 1);
 
     @Test
     void TestCodegen() {
